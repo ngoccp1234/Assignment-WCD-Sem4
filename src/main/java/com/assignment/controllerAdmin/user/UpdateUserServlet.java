@@ -12,12 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "UpdateUserServlet")
 public class UpdateUserServlet extends HttpServlet {
     UserDAO userDAO = new UserDAO();
     RoleDAO roleDAO = new RoleDAO();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("err.jsp");
+        PrintWriter pw = response.getWriter();
         int id = Integer.parseInt(request.getParameter("idUpdateUser"));
         String name = request.getParameter("nameUpdateUser");
         String email = request.getParameter("emailUpdateUser");
@@ -26,23 +29,36 @@ public class UpdateUserServlet extends HttpServlet {
         String password = request.getParameter("passwordUpdateUser");
         int status = Integer.parseInt(request.getParameter("statusUpdateUser"));
         String[]roles = request.getParameterValues("roleUpdateUser");
-        User user = new User(id, name, email, phone, username, password, status);
-        userDAO.updateUser(user);
-        if (roles != null && roles.length > 0)
-        {
-            for (String idRole : roles)
+        if ((name==null)||(name.equals(""))){
+            pw.write("PROVIDE USER NAME...");
+        }else if ((email==null)||(email.equals(""))){
+            pw.write("PROVIDE USER EMAIL...");
+        }else if ((phone==null)||(phone.equals(""))){
+            pw.write("PROVIDE USER PHONE...");
+        }else if ((username==null)||(username.equals(""))){
+            pw.write("PROVIDE USER USERNAME...");
+        }else if ((password==null)||(password.equals(""))){
+            pw.write("PROVIDE USER PASSWORD...");
+        }else if ((String.valueOf(status)==null)||(String.valueOf(status).equals(""))){
+            pw.write("PROVIDE USER STATUS...");
+        }else {
+            User user = new User(id, name, email, phone, username, password, status);
+            userDAO.updateUser(user);
+            if (roles != null && roles.length > 0)
             {
-                User_Role user_role = new User_Role();
-                user_role.setRoleId(Integer.parseInt(idRole));
-                user_role.setUserId(user.getId());
+                for (String idRole : roles)
+                {
+                    User_Role user_role = new User_Role();
+                    user_role.setRoleId(Integer.parseInt(idRole));
+                    user_role.setUserId(user.getId());
 //                userDAO.updateUserRole(user_role);
+                }
+                response.sendRedirect("/admin/users");
+            }else
+            {
+                response.sendRedirect("/admin/error");
             }
-            response.sendRedirect("/admin/users");
-        }else
-        {
-            response.sendRedirect("/admin/error");
         }
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

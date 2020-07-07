@@ -10,19 +10,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "UpdateRoleServlet")
 public class UpdateRoleServlet extends HttpServlet {
     RoleDAO dao = new RoleDAO();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("err.jsp");
+        PrintWriter pw = response.getWriter();
         int id = Integer.parseInt(request.getParameter("idUpdateRole"));
         String name = request.getParameter("nameUpdateRole");
         String description = request.getParameter("descriptionUpdateRole");
         int status = Integer.parseInt(request.getParameter("statusUpdateRole"));
-        Role role = new Role(id, name, description, status);
-        dao.updateRole(role);
-        response.sendRedirect("/admin/roles");
-
+        if ((name == null) || (name.equals(""))) {
+            pw.write("PROVIDE ROLE NAME...");
+        } else if ((description == null) || (description.equals(""))) {
+            pw.write("PROVIDE DESCRIPTION...");
+        } else if ((String.valueOf(status) == null) || (String.valueOf(status).equals(""))) {
+            pw.write("PROVIDE STATUS...");
+        }else {
+            Role role = new Role(id, name, description, status);
+            dao.updateRole(role);
+            response.sendRedirect("/admin/roles");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
