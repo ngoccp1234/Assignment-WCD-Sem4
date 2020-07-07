@@ -47,6 +47,14 @@ public class UpdateProductServlet extends HttpServlet {
             pw.write("PROVIDE PRODUCT STATUS...");
         } else if ((String.valueOf(categoryId) == null) || (String.valueOf(categoryId).equals(""))) {
             pw.write("PROVIDE PRODUCT CATEGORY...");
+        }else if ((String.valueOf(price).length() <= 4) || (String.valueOf(price).length() >= 50)) {
+            pw.write("PRICE >= 4 AND <= 50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)) {
+            pw.write("DESCRIPTION >= 5 AND <= 500");
+        } else if ((quantity <= 0)) {
+            pw.write("QUANTITY >= 0");
+        } else if ((name.length()<=5)||(name.length()>=50)) {
+            pw.write("NAME >= 5 AND <=50");
         } else {
             if (attributes != null && attributes.length > 0) {
                 List<Attribute> list = new ArrayList<Attribute>();

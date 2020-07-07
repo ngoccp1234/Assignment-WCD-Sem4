@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 @WebServlet(name = "UpdateCategoryServlet")
 public class UpdateCategoryServlet extends HttpServlet {
     CategoryDAO dao = new CategoryDAO();
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("err.jsp");
         PrintWriter pw = response.getWriter();
@@ -29,8 +30,12 @@ public class UpdateCategoryServlet extends HttpServlet {
             pw.write("PROVIDE CATEGORY NAME...");
         } else if ((description == null) || (description.equals(""))) {
             pw.write("PROVIDE CATEGORY DESCRIPTION...");
-        }else {
-            Category category = new Category(id, name, image,description, status);
+        } else if ((name.length() <= 5) || (name.length() >= 50)) {
+            pw.write("NAME >= 5 AND <=50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)) {
+            pw.write("DESCRIPTION >= 5 AND <=500");
+        } else {
+            Category category = new Category(id, name, image, description, status);
             dao.updateCategory(category);
             response.sendRedirect("/admin/categories");
         }
@@ -38,13 +43,11 @@ public class UpdateCategoryServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
-        if (id != null && id.length() > 0)
-        {
+        if (id != null && id.length() > 0) {
             request.setAttribute("getCategory", dao.getCategory(Integer.parseInt(id)));
             request.setAttribute("enumUpdateCt", EnumCategory.values());
             request.getRequestDispatcher("/views/admin/categories/updateCategory.jsp").forward(request, response);
-        }else
-        {
+        } else {
             response.sendRedirect("/admin/error");
         }
 
