@@ -21,6 +21,7 @@ import java.util.List;
 public class AddProductServlet extends HttpServlet {
     CategoryDAO categoryDAO = new CategoryDAO();
     ProductDAO productDAO = new ProductDAO();
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("err.jsp");
         PrintWriter pw = response.getWriter();
@@ -31,22 +32,30 @@ public class AddProductServlet extends HttpServlet {
         String description = request.getParameter("descriptionProduct");
         String status = request.getParameter("statusProduct");
         String category = request.getParameter("categoryProduct");
-        String[]attributes = request.getParameterValues("attributeId");
-        if ((name==null)||(name.equals(""))){
+        String[] attributes = request.getParameterValues("attributeId");
+        if ((name == null) || (name.equals(""))) {
             pw.write("PROVIDE PRODUCT NAME...");
-        }else if ((image==null)||(image.equals(""))){
+        } else if ((image == null) || (image.equals(""))) {
             pw.write("PROVIDE PRODUCT IMAGE...");
-        }else if ((price==null)||(price.equals(""))){
+        } else if ((price == null) || (price.equals(""))) {
             pw.write("PROVIDE PRODUCT PRICE...");
-        }else if ((quantity==null)||(quantity.equals(""))){
+        } else if ((quantity == null) || (quantity.equals(""))) {
             pw.write("PROVIDE PRODUCT QUANTITY...");
-        }else if ((description==null)||(description.equals(""))){
+        } else if ((description == null) || (description.equals(""))) {
             pw.write("PROVIDE PRODUCT DESCRIPTION...");
-        }else if ((status==null)||(status.equals(""))){
+        } else if ((status == null) || (status.equals(""))) {
             pw.write("PROVIDE PRODUCT STATUS...");
-        }else if ((category==null)||(category.equals(""))){
+        } else if ((category == null) || (category.equals(""))) {
             pw.write("PROVIDE PRODUCT CATEGORY...");
-        }else {
+        } else if ((price.length() <= 4) || (price.length() >= 50)) {
+            pw.write("PRICE >= 4 AND <= 50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)) {
+            pw.write("DESCRIPTION >= 5 AND <= 500");
+        } else if ((Integer.parseInt(quantity) <= 0)) {
+            pw.write("QUANTITY >= 0");
+        } else if ((name.length()<=5)||(name.length()>=50)) {
+            pw.write("NAME >= 5 AND <=50");
+        } else {
             Product product = new Product();
             product.setName(name);
             product.setImage(image);
@@ -55,11 +64,9 @@ public class AddProductServlet extends HttpServlet {
             product.setDescription(description);
             product.setStatus(Integer.parseInt(status));
             product.setCategory_id(Integer.parseInt(category));
-            if (attributes != null && attributes.length > 0)
-            {
+            if (attributes != null && attributes.length > 0) {
                 List<Attribute> list = new ArrayList<Attribute>();
-                for (String idAttr : attributes)
-                {
+                for (String idAttr : attributes) {
                     Attribute attribute = productDAO.getAttribute(Integer.parseInt(idAttr));
                     list.add(attribute);
                 }
@@ -69,6 +76,7 @@ public class AddProductServlet extends HttpServlet {
             response.sendRedirect("/admin/products");
         }
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("getCategories", categoryDAO.getAllCategory());
         request.setAttribute("enumProduct", EnumProduct.values());

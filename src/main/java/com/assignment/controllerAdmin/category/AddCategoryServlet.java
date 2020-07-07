@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 @WebServlet(name = "AddCategoryServlet")
 public class AddCategoryServlet extends HttpServlet {
     CategoryDAO dao = new CategoryDAO();
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("err.jsp");
         PrintWriter pw = response.getWriter();
@@ -28,6 +29,10 @@ public class AddCategoryServlet extends HttpServlet {
             pw.write("PROVIDE CATEGORY IMAGE...");
         } else if ((description == null) || (description.equals(""))) {
             pw.write("PROVIDE CATEGORY DESCRIPTION...");
+        } else if ((name.length() <= 5) || (name.length() >= 50)) {
+            pw.write("NAME >= 5 AND <=50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)) {
+            pw.write("DESCRIPTION >= 5 AND <=500");
         } else {
             Category category = new Category();
             category.setName(name);

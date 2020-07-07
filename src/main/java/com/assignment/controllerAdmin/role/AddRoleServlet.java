@@ -29,7 +29,11 @@ public class AddRoleServlet extends HttpServlet {
             pw.write("PROVIDE DESCRIPTION...");
         } else if ((status == null) || (status.equals(""))) {
             pw.write("PROVIDE STATUS...");
-        } else {
+        } else if ((name.length() <= 5) || (name.length() >= 50)) {
+            pw.write("NAME >= 5 AND <= 50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)){
+            pw.write("DESCRIPTION >= 5 AND <= 500");
+        }else{
             Role role = new Role();
             role.setName(name);
             role.setDescription(description);

@@ -46,6 +46,14 @@ public class AddUserServlet extends HttpServlet {
             pw.write("PROVIDE USER PASSWORD...");
         }else if ((status==null)||(status.equals(""))){
             pw.write("PROVIDE USER STATUS...");
+        }else if ((name.length()<=5)||(name.length()>=50)){
+            pw.write("NAME >= 5 AND <= 50");
+        }else if ((phone.length()<=10)||(name.length()>=11)){
+            pw.write("PHONE >= 10 AND <= 11");
+        }else if ((username.length()<=5)||(username.length()>=50)){
+            pw.write("USERNAME >= 5 AND <= 50");
+        }else if ((password.length()<=5)||(password.length()>=50)){
+            pw.write("PASSWORD >= 5 AND <= 50");
         }else {
             User user = new User();
             user.setName(name);

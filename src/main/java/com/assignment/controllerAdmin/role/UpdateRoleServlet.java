@@ -28,6 +28,11 @@ public class UpdateRoleServlet extends HttpServlet {
             pw.write("PROVIDE DESCRIPTION...");
         } else if ((String.valueOf(status) == null) || (String.valueOf(status).equals(""))) {
             pw.write("PROVIDE STATUS...");
+        }
+        else if ((name.length() <= 5) || (name.length() >= 50)) {
+            pw.write("NAME >= 5 AND <= 50");
+        } else if ((description.length() <= 5) || (description.length() >= 500)){
+            pw.write("DESCRIPTION >= 5 AND <= 500");
         }else {
             Role role = new Role(id, name, description, status);
             dao.updateRole(role);

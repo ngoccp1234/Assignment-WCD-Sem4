@@ -28,3 +28,4 @@
 
 <!-- Page level custom scripts -->
 <script src="<c:url value='/commom/admin/assets/js/demo/datatables-demo.js'/>"></script>
+<script src="<c:url value='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js'/>"></script>
