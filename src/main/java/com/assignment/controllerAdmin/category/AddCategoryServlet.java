@@ -10,22 +10,33 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "AddCategoryServlet")
 public class AddCategoryServlet extends HttpServlet {
     CategoryDAO dao = new CategoryDAO();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("err.jsp");
+        PrintWriter pw = response.getWriter();
         String name = request.getParameter("nameCategory");
         int status = Integer.parseInt(request.getParameter("statusCategory"));
         String image = request.getParameter("imageCategory");
         String description = request.getParameter("descriptionCategory");
-        Category category = new Category();
-        category.setName(name);
-        category.setImage(image);
-        category.setDescription(description);
-        category.setStatus(status);
-        dao.insertCategory(category);
-        response.sendRedirect("/admin/categories");
+        if ((name == null) || (name.equals(""))) {
+            pw.write("PROVIDE CATEGORY NAME...");
+        } else if ((image == null) || (image.equals(""))) {
+            pw.write("PROVIDE CATEGORY IMAGE...");
+        } else if ((description == null) || (description.equals(""))) {
+            pw.write("PROVIDE CATEGORY DESCRIPTION...");
+        } else {
+            Category category = new Category();
+            category.setName(name);
+            category.setImage(image);
+            category.setDescription(description);
+            category.setStatus(status);
+            dao.insertCategory(category);
+            response.sendRedirect("/admin/categories");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
