@@ -60,4 +60,14 @@ public class RoleDAO {
         em.close();
         return role;
     }
+
+    public Role getRoleforName(String name) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Role role = em.createQuery("select u from Role u where u.name = '" + name + "'", Role.class).getSingleResult();
+        em.persist(role);
+        em.getTransaction().commit();
+        em.close();
+        return role;
+    }
 }
