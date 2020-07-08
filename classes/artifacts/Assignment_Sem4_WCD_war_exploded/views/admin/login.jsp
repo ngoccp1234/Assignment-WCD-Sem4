@@ -13,7 +13,7 @@
                 <img src="https://colorlib.com/etc/lf/Login_v1/images/img-01.png" alt="IMG">
             </div>
 
-            <form class="login100-form validate-form">
+            <form class="login100-form validate-form" method="post">
 					<span class="login100-form-title">
 						Member Login
 					</span>

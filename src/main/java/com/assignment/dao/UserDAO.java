@@ -15,15 +15,15 @@ public class UserDAO {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence");
     EntityManager em = emf.createEntityManager();
 
-//    public User doLogin(String user_name, String pass_word)
-//    {
-//        em = emf.createEntityManager();
-//        em.getTransaction().begin();
-//        User user = em.find(User.class, user_name, LockModeType.valueOf(pass_word));
-//        em.getTransaction().commit();
-//        em.close();
-//        return user;
-//    }
+    public User doLogin(String email) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User user = em.createQuery("select u from User u where u.email = '" + email +"'", User.class).getSingleResult();
+        em.persist(user);
+        em.getTransaction().commit();
+        em.close();
+        return user;
+    }
 
     public void insertUser(User user) {
         em = emf.createEntityManager();
