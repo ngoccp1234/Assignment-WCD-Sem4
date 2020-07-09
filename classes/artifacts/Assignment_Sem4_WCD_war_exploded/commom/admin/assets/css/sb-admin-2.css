@@ -89,6 +89,10 @@ p {
   margin-bottom: 1rem;
 }
 
+.error {
+  color: red;
+}
+
 abbr[title],
 abbr[data-original-title] {
   text-decoration: underline;
@@ -10911,8 +10915,7 @@ form.user .btn-user {
 }
 
 .error {
-  color: #5a5c69;
-  font-size: 7rem;
+  color: red;
   position: relative;
   line-height: 1;
   width: 12.5rem;

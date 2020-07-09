@@ -3,8 +3,10 @@ package com.assignment.controllerAdmin.product;
 import com.assignment.dao.CategoryDAO;
 import com.assignment.dao.ProductDAO;
 import com.assignment.model.Attribute;
+import com.assignment.model.Enum.EnumCategory;
 import com.assignment.model.Enum.EnumProduct;
 import com.assignment.model.Product;
+import com.assignment.model.validate.ProductForm;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,29 +35,35 @@ public class AddProductServlet extends HttpServlet {
         String status = request.getParameter("statusProduct");
         String category = request.getParameter("categoryProduct");
         String[] attributes = request.getParameterValues("attributeId");
-        if ((name == null) || (name.equals(""))) {
-            pw.write("PROVIDE PRODUCT NAME...");
-        } else if ((image == null) || (image.equals(""))) {
-            pw.write("PROVIDE PRODUCT IMAGE...");
-        } else if ((price == null) || (price.equals(""))) {
-            pw.write("PROVIDE PRODUCT PRICE...");
-        } else if ((quantity == null) || (quantity.equals(""))) {
-            pw.write("PROVIDE PRODUCT QUANTITY...");
-        } else if ((description == null) || (description.equals(""))) {
-            pw.write("PROVIDE PRODUCT DESCRIPTION...");
-        } else if ((status == null) || (status.equals(""))) {
-            pw.write("PROVIDE PRODUCT STATUS...");
-        } else if ((category == null) || (category.equals(""))) {
-            pw.write("PROVIDE PRODUCT CATEGORY...");
-        } else if ((price.length() <= 4) || (price.length() >= 50)) {
-            pw.write("PRICE >= 4 AND <= 50");
-        } else if ((description.length() <= 5) || (description.length() >= 500)) {
-            pw.write("DESCRIPTION >= 5 AND <= 500");
-        } else if ((Integer.parseInt(quantity) <= 0)) {
-            pw.write("QUANTITY >= 0");
-        } else if ((name.length()<=5)||(name.length()>=50)) {
-            pw.write("NAME >= 5 AND <=50");
-        } else {
+//        if ((name == null) || (name.equals(""))) {
+//            pw.write("PROVIDE PRODUCT NAME...");
+//        } else if ((image == null) || (image.equals(""))) {
+//            pw.write("PROVIDE PRODUCT IMAGE...");
+//        } else if ((price == null) || (price.equals(""))) {
+//            pw.write("PROVIDE PRODUCT PRICE...");
+//        } else if ((quantity == null) || (quantity.equals(""))) {
+//            pw.write("PROVIDE PRODUCT QUANTITY...");
+//        } else if ((description == null) || (description.equals(""))) {
+//            pw.write("PROVIDE PRODUCT DESCRIPTION...");
+//        } else if ((status == null) || (status.equals(""))) {
+//            pw.write("PROVIDE PRODUCT STATUS...");
+//        } else if ((category == null) || (category.equals(""))) {
+//            pw.write("PROVIDE PRODUCT CATEGORY...");
+//        } else if ((price.length() <= 4) || (price.length() >= 50)) {
+//            pw.write("PRICE >= 4 AND <= 50");
+//        } else if ((description.length() <= 5) || (description.length() >= 500)) {
+//            pw.write("DESCRIPTION >= 5 AND <= 500");
+//        } else if ((Integer.parseInt(quantity) <= 0)) {
+//            pw.write("QUANTITY >= 0");
+//        } else if ((name.length()<=5)||(name.length()>=50)) {
+//            pw.write("NAME >= 5 AND <=50");
+//        }
+        ProductForm productForm=new ProductForm(name,image,price,quantity,description);
+        if (productForm.getErrors().size() > 0) {
+            request.setAttribute("errors", productForm.getErrors());
+            request.getRequestDispatcher("/views/admin/products/addProduct.jsp").forward(request, response);
+        }
+        else {
             Product product = new Product();
             product.setName(name);
             product.setImage(image);
@@ -78,9 +86,12 @@ public class AddProductServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("getCategories", categoryDAO.getAllCategory());
-        request.setAttribute("enumProduct", EnumProduct.values());
-        request.setAttribute("attributeList", productDAO.getAllAttribute());
+
+        HttpSession session = request.getSession();
+        session.setAttribute("getCategories", categoryDAO.getAllCategory());
+        session.setAttribute("enumProduct", EnumProduct.values());
+        session.setAttribute("attributeList", productDAO.getAllAttribute());
+        session.setAttribute("attributeList", productDAO.getAllAttribute());
         request.getRequestDispatcher("/views/admin/products/addProduct.jsp").forward(request, response);
     }
 }
