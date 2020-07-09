@@ -7,12 +7,15 @@ import com.assignment.model.Enum.EnumUser;
 import com.assignment.model.Role;
 import com.assignment.model.User;
 import com.assignment.model.User_Role;
+import com.assignment.model.validate.ProductForm;
+import com.assignment.model.validate.UserForm;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -24,8 +27,6 @@ public class AddUserServlet extends HttpServlet {
     UserDAO userDAO = new UserDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("err.jsp");
-        PrintWriter pw = response.getWriter();
         String name = request.getParameter("nameUser");
         String email = request.getParameter("emailUser");
         String phone = request.getParameter("phoneUser");
@@ -33,28 +34,11 @@ public class AddUserServlet extends HttpServlet {
         String password = request.getParameter("passwordUser");
         String status = request.getParameter("statusUser");
         String[] roles = request.getParameterValues("rolesUser");
-
-        if ((name==null)||(name.equals(""))){
-            pw.write("PROVIDE USER NAME...");
-        }else if ((email==null)||(email.equals(""))){
-            pw.write("PROVIDE USER EMAIL...");
-        }else if ((phone==null)||(phone.equals(""))){
-            pw.write("PROVIDE USER PHONE...");
-        }else if ((username==null)||(username.equals(""))){
-            pw.write("PROVIDE USER USERNAME...");
-        }else if ((password==null)||(password.equals(""))){
-            pw.write("PROVIDE USER PASSWORD...");
-        }else if ((status==null)||(status.equals(""))){
-            pw.write("PROVIDE USER STATUS...");
-        }else if ((name.length()<=5)||(name.length()>=50)){
-            pw.write("NAME >= 5 AND <= 50");
-        }else if ((phone.length()<=10)||(name.length()>=11)){
-            pw.write("PHONE >= 10 AND <= 11");
-        }else if ((username.length()<=5)||(username.length()>=50)){
-            pw.write("USERNAME >= 5 AND <= 50");
-        }else if ((password.length()<=5)||(password.length()>=50)){
-            pw.write("PASSWORD >= 5 AND <= 50");
-        }else {
+        UserForm userForm = new UserForm(name, email, password, phone, username);
+        if (userForm.getErrors().size() > 0) {
+            request.setAttribute("errorsU", userForm.getErrors());
+            request.getRequestDispatcher("/views/admin/users/addUser.jsp").forward(request, response);
+        } else {
             User user = new User();
             user.setName(name);
             user.setEmail(email);
@@ -83,8 +67,9 @@ public class AddUserServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("getRoles", roleDAO.getAllRole());
-        request.setAttribute("enumUser", EnumUser.values());
+        HttpSession session = request.getSession();
+        session.setAttribute("getRoles", roleDAO.getAllRole());
+        session.setAttribute("enumUser", EnumUser.values());
         request.getRequestDispatcher("/views/admin/users/addUser.jsp").forward(request, response);
     }
 }

@@ -32,11 +32,11 @@ public class AdminFilter implements Filter {
         int idroleuser = user_role.getRoleId();
         Role role = roleDAO.getRoleforName("Admin");
         int idrole = role.getId();
-        if (idrole == idroleuser) {
-            chain.doFilter(request, response);
-        } else {
+        if (idrole != idroleuser) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.sendRedirect("/admin-login");
+        } else {
+            chain.doFilter(request, response);
         }
     }
 

@@ -68,6 +68,29 @@ inverseJoinColumns = @JoinColumn(name = "attribute_id"))
     this.category_id = categoryId;
     this.attributes = list;
     }
+    public Product(int id, String name, String image, int price, int quantity, String description, int status, int categoryId) {
+    this.id = id;
+    this.name = name;
+    this.image = image;
+    this.price = price;
+    this.quantity = quantity;
+    this.description = description;
+    this.status = status;
+    this.category_id = categoryId;
+    }
+
+    public Product(String name, String image, int price, int quantity, String description, int status, int category_id, Category category) {
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.status = status;
+        this.category_id = category_id;
+        this.category = category;
+    }
+
+
 
     public int getQuantity() {
         return quantity;
